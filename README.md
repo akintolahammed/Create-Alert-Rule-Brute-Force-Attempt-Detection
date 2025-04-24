@@ -64,28 +64,31 @@ DeviceProcessEvents
 ```
 ```kql
 DeviceLogonEvents
-| where TimeGenerated >= ago(5h)
-| where ActionType == "LogonFailed"
-| summarize NumberOfFailures = count() by RemoteIP, ActionType, DeviceName
-| where NumberOfFailures >= 10
+|where TimeGenerated >= ago(5h)
+|where ActionType == "LogonFailed"
+|summarize numberoffailures = count() by RemoteIP, ActionType, DeviceName
+|where numberoffailures >= 10
 ```
-![Screenshot 2025-01-13 182228](https://github.com/user-attachments/assets/d69ebc60-597d-4c13-8ef2-20b19b7a3778)
+<img width="926" alt="image" src="https://github.com/user-attachments/assets/36a82226-6343-4db7-ac19-c2e9cda1d669" />
+
+
 
 
 - **Three Azure VMs** were targeted by brute force attempts from **three public IPs**:
   
   | **Remote IP**       | **Failed Attempts** | **Target Machine**    |
   |---------------------|---------------------|-----------------------|
-  | `87.120.127.241`    | 116                 | `linux-agent-scan-sam`    |
-  | `194.0.234.44`     | 100                 | `bennyvirtual`    |
-  | `10.0.0.8`    | 22, 20                 | `windows-server,ryan-final-lab `     |
+  | `209.38.19.113`    | 100                 | `2fp-agent-linux-scan.p2zfvso05mlezjev3ck4vqd3kd.cx.internal.cloudapp.net`    |
+  | `209.38.22.205`     | 102                 | `linux-moath.p2zfvso05mlezjev3ck4vqd3kd.cx.internal.cloudapp.net`    |
+  | `10.0.0.8`    | 72, 44                  | `sahansvr1,buzz-win10-vm `     |
 
-![Screenshot 2025-01-06 181511](https://github.com/user-attachments/assets/3134d542-b44d-4036-b2ce-1827bc7dda88)
+<img width="926" alt="image" src="https://github.com/user-attachments/assets/481eda76-ce02-417e-8ce9-79e51d5d93f6" />
+
 
 - KQL Query to detect failed logins:  
   ```kql
   DeviceLogonEvents
-  | where RemoteIP in ("87.120.127.241", "194.0.234.44", "10.0.0.8" )
+  | where RemoteIP in ("209.38.19.113", "209.38.22.205", "10.0.0.8" )
   | where ActionType != "LogonFailed"
   ```
 
@@ -167,7 +170,8 @@ After clicking **"Scheduled query rule"**, you’ll see the **Analytics rule det
      - **🎯 Initial Access**
      - **🔑 Credential Access**
       
-![Screenshot 2025-01-14 103734](https://github.com/user-attachments/assets/f6558c4d-585b-4e63-b787-1cc071cc0ad0)
+<img width="943" alt="image" src="https://github.com/user-attachments/assets/4c6186c0-ff61-451c-9f2e-512b8a4b992a" />
+
 
 5. **Rule type**:  
    - Select **Scheduled 🕒**.
@@ -185,12 +189,14 @@ In the **Set rule query** step, paste your KQL query to detect brute-force attem
 
 ```kql
 DeviceLogonEvents
-| where TimeGenerated >= ago(5h)
-| where ActionType == "LogonFailed"
-| summarize NumberOfFailures = count() by RemoteIP, ActionType, DeviceName
-| where NumberOfFailures >= 10s
+|where TimeGenerated >= ago(5h)
+|where ActionType == "LogonFailed"
+|summarize numberoffailures = count() by RemoteIP, ActionType, DeviceName
+|where numberoffailures >= 10
 ```
-![Screenshot 2025-01-14 111832](https://github.com/user-attachments/assets/b1164c0f-6022-444e-a409-43c1d4e9a579)
+<img width="911" alt="image" src="https://github.com/user-attachments/assets/5481c002-d394-4dda-a69b-0b562b91476d" />
+
+
 
 - 🛠️ This query filters **sign-in logs** for failed login attempts and identifies unusual patterns.  
 - 💡 Adjust thresholds based on your environment (e.g., `> 5 failed attempts`).
